@@ -9,24 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="index.css">
-    
-    <style>
-        .hero-section h1 em .different-font {
-            font-family: 'Newsreader', serif;
-            font-style: italic;
-            font-weight: 500;
-        }
-
-        .sidebar-menu li.logout-item a {
-            color: #f43f5e;
-            transition: all 0.2s ease;
-        }
-
-        .sidebar-menu li.logout-item a:hover {
-            background-color: #ffe4e6;
-            color: #e11d48;
-        }
-    </style>
 </head>
 <body>
 
@@ -35,11 +17,13 @@
             <button class="btn-toggle" onclick="toggleSidebar()" title="Buka Menu">
                 <i class="fa-solid fa-bars"></i>
             </button>
+
             <div class="brand">
                 <span class="brand-dot"></span>
                 <span class="brand-title">RuangQueen</span>
             </div>
         </div>
+
         <div class="stats-chip">
             <span>Total Siswa</span>
             <strong id="total-students">0</strong>
@@ -47,97 +31,262 @@
     </nav>
 
     <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h3>Menu Utama</h3>
             <button class="btn-close-sidebar" onclick="toggleSidebar()">&times;</button>
         </div>
+
         <ul class="sidebar-menu">
             <li class="active">
-                <a href="#"><i class="fa-solid fa-graduation-cap"></i> Data Siswa</a>
+                <a href="#">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    Data Siswa
+                </a>
             </li>
+
             <li>
-                <a href="#"><i class="fa-solid fa-chart-pie"></i> Analistik</a>
+                <a href="#">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    Analistik
+                </a>
             </li>
+
             <li>
-                <a href="#"><i class="fa-solid fa-gear"></i> Pengaturan</a>
+                <a href="#">
+                    <i class="fa-solid fa-gear"></i>
+                    Pengaturan
+                </a>
             </li>
-            <li class="logout-item" style="margin-top: 2rem; border-top: 1px solid #e2e8f0; padding-top: 0.5rem;">
-                <a href="#" id="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Keluar / Logout</a>
+
+            <li class="logout-item">
+                <a href="#" id="btn-logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Keluar / Logout
+                </a>
             </li>
         </ul>
     </aside>
 
     <main class="app-wrapper">
+
         <section class="hero-section">
-            <h1>Kelola Data <em><span class="different-font">&amp; Siswa</span></em></h1>
-            <p>Sistem manajemen data siswa yang cepat, responsif, dan modern.</p>
+            <h1>
+                Kelola Data
+                <em>
+                    <span class="different-font">&amp; Siswa</span>
+                </em>
+            </h1>
+
+            <p>
+                Sistem manajemen data siswa yang cepat, responsif, dan modern.
+            </p>
         </section>
 
-        <!-- Alert Notification Box -->
         <div id="alert" class="alert hidden"></div>
 
         <div class="controls-bar">
+
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="search-input" placeholder="Cari nama, NIS, atau kelas..." onkeyup="filterStudents()">
+
+                <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Cari nama, NIS, atau kelas..."
+                    oninput="filterStudents()"
+                >
             </div>
-            <button class="btn-action primary" onclick="openModal('add')">
+
+            <select
+                id="class-filter"
+                class="class-filter"
+                onchange="filterStudents()"
+            >
+                <option value="">Semua Kelas</option>
+            </select>
+
+            <button
+                class="btn-action primary"
+                onclick="openModal('add')"
+            >
                 <i class="fa-solid fa-plus"></i>
                 <span>Tambah Siswa</span>
             </button>
-            <button class="btn-action icon-only" id="btn-reload" title="Muat Ulang" onclick="fetchStudents()">
+
+            <button
+                class="btn-action icon-only"
+                onclick="toggleDarkMode()"
+                title="Dark Mode"
+            >
+                <i class="fa-solid fa-moon" id="dark-mode-icon"></i>
+            </button>
+
+            <button
+                class="btn-action icon-only"
+                id="btn-reload"
+                title="Muat Ulang"
+                onclick="fetchStudents()"
+            >
                 <i class="fa-solid fa-rotate-right" id="icon-reload"></i>
             </button>
+
         </div>
 
-        <section class="user-grid" id="student-cards-container">
-        </section>
+        <section
+            class="user-grid"
+            id="student-cards-container"
+        ></section>
+
+        <div
+            class="pagination"
+            id="pagination"
+        ></div>
+
     </main>
 
-    <!-- Modal Form Tambah/Edit Siswa -->
-    <div class="modal-overlay" id="student-modal">
+    <div
+        class="modal-overlay"
+        id="student-modal"
+    >
         <div class="modal-card">
+
             <div class="modal-header">
-                <h3 id="form-title">Tambah Siswa Baru</h3>
-                <button class="btn-close" onclick="closeModal()">&times;</button>
+                <h3 id="form-title">
+                    Tambah Siswa Baru
+                </h3>
+
+                <button
+                    class="btn-close"
+                    onclick="closeModal()"
+                >
+                    &times;
+                </button>
             </div>
+
             <form id="student-form">
-                <input type="hidden" id="student-id">
-                
+
+                <input
+                    type="hidden"
+                    id="student-id"
+                >
+
                 <div class="form-group">
-                    <label for="nama">Nama Lengkap</label>
-                    <input type="text" id="nama" placeholder="Masukkan nama siswa" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="nis">NIS</label>
-                    <input type="text" id="nis" placeholder="Masukkan NIS" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="kelas">Kelas</label>
-                    <input type="text" id="kelas" placeholder="Contoh: XI RPL 1" required>
+                    <label for="nama">
+                        Nama Lengkap
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nama"
+                        placeholder="Masukkan nama siswa"
+                        required
+                    >
                 </div>
 
                 <div class="form-group">
-                    <label for="jurusan">Jurusan</label>
-                    <input type="text" id="jurusan" placeholder="Contoh: Rekayasa Perangkat Lunak" required>
+                    <label for="foto">
+                        Foto Siswa
+                    </label>
+
+                    <input
+                        type="file"
+                        id="foto"
+                        accept="image/*"
+                        onchange="previewPhoto(event)"
+                    >
+
+                    <div
+                        id="photo-preview"
+                        class="photo-preview hidden"
+                    >
+                        <img
+                            id="preview-image"
+                            src=""
+                            alt="Preview Foto"
+                        >
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="alamat">Alamat</label>
-                    <input type="text" id="alamat" placeholder="Masukkan alamat" required>
+                    <label for="nis">
+                        NIS
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nis"
+                        placeholder="Masukkan NIS"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="kelas">
+                        Kelas
+                    </label>
+
+                    <input
+                        type="text"
+                        id="kelas"
+                        placeholder="Contoh: XII RPL 1"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="jurusan">
+                        Jurusan
+                    </label>
+
+                    <input
+                        type="text"
+                        id="jurusan"
+                        placeholder="Contoh: Rekayasa Perangkat Lunak"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="alamat">
+                        Alamat
+                    </label>
+
+                    <input
+                        type="text"
+                        id="alamat"
+                        placeholder="Masukkan alamat"
+                        required
+                    >
                 </div>
 
                 <div class="modal-actions">
-                    <button type="button" class="btn-secondary" onclick="closeModal()">Batal</button>
-                    <button type="submit" class="btn-primary" id="btn-save">Simpan Data</button>
+
+                    <button
+                        type="button"
+                        class="btn-secondary"
+                        onclick="closeModal()"
+                    >
+                        Batal
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn-primary"
+                        id="btn-save"
+                    >
+                        Simpan Data
+                    </button>
+
                 </div>
+
             </form>
+
         </div>
     </div>
 
     <script src="script.js"></script>
+
 </body>
 </html>
