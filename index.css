@@ -1,292 +1,637 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Management System</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="index.css">
-</head>
-<body>
+:root {
+    --bg-main: #fcf7ff;
+    --bg-surface: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #faedff;
+    
+    --primary-gradient: linear-gradient(135deg, #a855f7, #ec4899);
+    --card-gradient-top: linear-gradient(90deg, #38bdf8, #c084fc, #f472b6);
+    --accent-soft: #f3e8ff;
+    --accent-purple: #9333ea;
+    
+    --border-subtle: #f0e5f5;
+    --border-active: #d8b4fe;
+    
+    --text-primary: #3b0764;
+    --text-secondary: #6b21a8;
+    --text-muted: #a855f7;
+    
+    --sidebar-bg: #ffffff;
+    --sidebar-width: 260px;
+    
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    
+    --shadow-soft: 0 10px 25px -5px rgba(168, 85, 247, 0.12);
+    --shadow-hover: 0 15px 30px -5px rgba(236, 72, 153, 0.2);
+}
 
-    <nav class="navbar">
-        <div class="nav-left">
-            <button class="btn-toggle" onclick="toggleSidebar()" title="Buka Menu">
-                <i class="fa-solid fa-bars"></i>
-            </button>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
 
-            <div class="brand">
-                <span class="brand-dot"></span>
-                <span class="brand-title">RuangQueen</span>
-            </div>
-        </div>
+body {
+    background-color: var(--bg-main);
+    background-image: radial-gradient(#f0abfc 0.75px, transparent 0.75px), radial-gradient(#38bdf8 0.75px, var(--bg-main) 0.75px);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px;
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
 
-        <div class="stats-chip">
-            <span>Total Siswa</span>
-            <strong id="total-students">0</strong>
-        </div>
-    </nav>
+/* Header Navbar */
+.navbar {
+    height: 68px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 2px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
 
-    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
 
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h3>Menu Utama</h3>
-            <button class="btn-close-sidebar" onclick="toggleSidebar()">&times;</button>
-        </div>
+.btn-toggle {
+    background: var(--accent-soft);
+    border: none;
+    color: var(--accent-purple);
+    font-size: 1.1rem;
+    cursor: pointer;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
 
-        <ul class="sidebar-menu">
-            <li class="active">
-                <a href="#">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                    Data Siswa
-                </a>
-            </li>
+.btn-toggle:hover {
+    transform: scale(1.08);
+    background: #e9d5ff;
+}
 
-            <li>
-                <a href="#">
-                    <i class="fa-solid fa-chart-pie"></i>
-                    Analistik
-                </a>
-            </li>
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
 
-            <li>
-                <a href="#">
-                    <i class="fa-solid fa-gear"></i>
-                    Pengaturan
-                </a>
-            </li>
+.brand-dot {
+    width: 12px;
+    height: 12px;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
+}
 
-            <li class="logout-item">
-                <a href="#" id="btn-logout">
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                    Keluar / Logout
-                </a>
-            </li>
-        </ul>
-    </aside>
+.brand-title {
+    font-weight: 800;
+    font-size: 1.15rem;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+}
 
-    <main class="app-wrapper">
+.stats-chip {
+    background: #fdf2f8;
+    border: 1px solid #fbcfe8;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    font-size: 0.825rem;
+    color: #db2777;
+    font-weight: 600;
+}
 
-        <section class="hero-section">
-            <h1>
-                Kelola Data
-                <em>
-                    <span class="different-font">&amp; Siswa</span>
-                </em>
-            </h1>
+.stats-chip strong {
+    color: #be185d;
+    font-size: 0.95rem;
+}
 
-            <p>
-                Sistem manajemen data siswa yang cepat, responsif, dan modern.
-            </p>
-        </section>
+/* Sidebar Menu */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(88, 28, 135, 0.2);
+    backdrop-filter: blur(4px);
+    z-index: 90;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
 
-        <div id="alert" class="alert hidden"></div>
+.sidebar-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
 
-        <div class="controls-bar">
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: calc(-1 * var(--sidebar-width));
+    width: var(--sidebar-width);
+    height: 100%;
+    background: var(--sidebar-bg);
+    border-right: 2px solid var(--border-subtle);
+    z-index: 100;
+    transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 1rem;
+    box-shadow: 10px 0 30px rgba(168, 85, 247, 0.1);
+}
 
-            <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
+.sidebar.active {
+    left: 0;
+}
 
-                <input
-                    type="text"
-                    id="search-input"
-                    placeholder="Cari nama, NIS, atau kelas..."
-                    oninput="filterStudents()"
-                >
-            </div>
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 2px solid var(--border-subtle);
+}
 
-            <select
-                id="class-filter"
-                class="class-filter"
-                onchange="filterStudents()"
-            >
-                <option value="">Semua Kelas</option>
-            </select>
+.sidebar-header h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
 
-            <button
-                class="btn-action primary"
-                onclick="openModal('add')"
-            >
-                <i class="fa-solid fa-plus"></i>
-                <span>Tambah Siswa</span>
-            </button>
+.btn-close-sidebar {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.3rem;
+    cursor: pointer;
+}
 
-            <button
-                class="btn-action icon-only"
-                onclick="toggleDarkMode()"
-                title="Dark Mode"
-            >
-                <i class="fa-solid fa-moon" id="dark-mode-icon"></i>
-            </button>
+.sidebar-menu {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
 
-            <button
-                class="btn-action icon-only"
-                id="btn-reload"
-                title="Muat Ulang"
-                onclick="fetchStudents()"
-            >
-                <i class="fa-solid fa-rotate-right" id="icon-reload"></i>
-            </button>
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.9rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s;
+}
 
-        </div>
+.sidebar-menu a:hover {
+    background: var(--accent-soft);
+    color: var(--accent-purple);
+    transform: translateX(4px);
+}
 
-        <section
-            class="user-grid"
-            id="student-cards-container"
-        ></section>
+.sidebar-menu li.active a {
+    background: var(--primary-gradient);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.25);
+}
 
-        <div
-            class="pagination"
-            id="pagination"
-        ></div>
+/* Main Container Area */
+.app-wrapper {
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    flex: 1;
+}
 
-    </main>
+.hero-section {
+    margin-bottom: 1.8rem;
+    text-align: center;
+}
 
-    <div
-        class="modal-overlay"
-        id="student-modal"
-    >
-        <div class="modal-card">
+.hero-section h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+}
 
-            <div class="modal-header">
-                <h3 id="form-title">
-                    Tambah Siswa Baru
-                </h3>
+.hero-section p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
 
-                <button
-                    class="btn-close"
-                    onclick="closeModal()"
-                >
-                    &times;
-                </button>
-            </div>
+/* Controls Bar */
+.controls-bar {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+}
 
-            <form id="student-form">
+.search-box {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
 
-                <input
-                    type="hidden"
-                    id="student-id"
-                >
+.search-box i {
+    position: absolute;
+    left: 1rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
 
-                <div class="form-group">
-                    <label for="nama">
-                        Nama Lengkap
-                    </label>
+.search-box input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.6rem;
+    background: var(--bg-surface);
+    border: 2px solid var(--border-subtle);
+    border-radius: 50px;
+    outline: none;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
 
-                    <input
-                        type="text"
-                        id="nama"
-                        placeholder="Masukkan nama siswa"
-                        required
-                    >
-                </div>
+.search-box input:focus {
+    border-color: var(--border-active);
+    box-shadow: 0 0 0 4px rgba(216, 180, 254, 0.3);
+}
 
-                <div class="form-group">
-                    <label for="foto">
-                        Foto Siswa
-                    </label>
+.btn-action {
+    padding: 0.75rem 1.25rem;
+    border-radius: 50px;
+    border: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
 
-                    <input
-                        type="file"
-                        id="foto"
-                        accept="image/*"
-                        onchange="previewPhoto(event)"
-                    >
+.btn-action.primary {
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.3);
+}
 
-                    <div
-                        id="photo-preview"
-                        class="photo-preview hidden"
-                    >
-                        <img
-                            id="preview-image"
-                            src=""
-                            alt="Preview Foto"
-                        >
-                    </div>
-                </div>
+.btn-action.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+}
 
-                <div class="form-group">
-                    <label for="nis">
-                        NIS
-                    </label>
+.btn-action.icon-only {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    justify-content: center;
+    background: var(--bg-surface);
+    border: 2px solid var(--border-subtle);
+    color: var(--text-secondary);
+    border-radius: 50%;
+}
 
-                    <input
-                        type="text"
-                        id="nis"
-                        placeholder="Masukkan NIS"
-                        required
-                    >
-                </div>
+.btn-action.icon-only:hover {
+    background: var(--accent-soft);
+    color: var(--accent-purple);
+}
 
-                <div class="form-group">
-                    <label for="kelas">
-                        Kelas
-                    </label>
+/* User Grid & Cards */
+.user-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+}
 
-                    <input
-                        type="text"
-                        id="kelas"
-                        placeholder="Contoh: XII RPL 1"
-                        required
-                    >
-                </div>
+.user-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--border-subtle);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-soft);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.25s ease;
+}
 
-                <div class="form-group">
-                    <label for="jurusan">
-                        Jurusan
-                    </label>
+.user-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: var(--card-gradient-top);
+}
 
-                    <input
-                        type="text"
-                        id="jurusan"
-                        placeholder="Contoh: Rekayasa Perangkat Lunak"
-                        required
-                    >
-                </div>
+.user-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-active);
+    box-shadow: var(--shadow-hover);
+    background: var(--bg-card-hover);
+}
 
-                <div class="form-group">
-                    <label for="alamat">
-                        Alamat
-                    </label>
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
 
-                    <input
-                        type="text"
-                        id="alamat"
-                        placeholder="Masukkan alamat"
-                        required
-                    >
-                </div>
+.avatar {
+    width: 46px;
+    height: 46px;
+    background: var(--primary-gradient);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 10px rgba(168, 85, 247, 0.3);
+}
 
-                <div class="modal-actions">
+.card-actions {
+    display: flex;
+    gap: 0.35rem;
+}
 
-                    <button
-                        type="button"
-                        class="btn-secondary"
-                        onclick="closeModal()"
-                    >
-                        Batal
-                    </button>
+.btn-icon-sm {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
 
-                    <button
-                        type="submit"
-                        class="btn-primary"
-                        id="btn-save"
-                    >
-                        Simpan Data
-                    </button>
+.btn-icon-sm.edit {
+    background: #fef3c7;
+    color: #d97706;
+}
 
-                </div>
+.btn-icon-sm.edit:hover {
+    background: #fde68a;
+}
 
-            </form>
+.btn-icon-sm.delete {
+    background: #ffe4e6;
+    color: #e11d48;
+}
 
-        </div>
-    </div>
+.btn-icon-sm.delete:hover {
+    background: #fecdd3;
+}
 
-    <script src="script.js"></script>
+.card-body h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.4rem;
+}
 
-</body>
-</html>
+.student-info {
+    font-size: 0.825rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.student-info p {
+    margin-bottom: 0.2rem;
+}
+
+.student-info strong {
+    color: var(--text-primary);
+}
+
+.card-footer {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--border-subtle);
+    display: flex;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* Modal Styling */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(59, 7, 100, 0.4);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-card {
+    background: var(--bg-surface);
+    width: 90%;
+    max-width: 480px;
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    border: 2px solid var(--border-subtle);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+
+.modal-header h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.825rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: var(--text-primary);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--border-subtle);
+    outline: none;
+    font-size: 0.875rem;
+    background: #faf5ff;
+    transition: all 0.2s;
+}
+
+.form-group input:focus {
+    border-color: var(--border-active);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(216, 180, 254, 0.3);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+}
+
+.btn-secondary {
+    background: var(--accent-soft);
+    color: var(--text-secondary);
+    border: none;
+    padding: 0.65rem 1.2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    padding: 0.65rem 1.2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(236, 72, 153, 0.3);
+}
+
+/* Alert Notification */
+.alert {
+    padding: 0.85rem 1.1rem;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    transition: all 0.3s;
+}
+
+.alert-success {
+    background-color: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+.alert-error {
+    background-color: #ffe4e6;
+    color: #be123c;
+    border: 1px solid #fecdd3;
+}
+
+/* State & Loading Screen */
+.state-card {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem 1rem;
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    border: 2px dashed var(--border-subtle);
+}
+
+.state-icon {
+    font-size: 2.5rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+}
+
+.state-text {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.hidden {
+    display: none !important;
+}
+
+select {
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    border: 2px solid #f0e6ff;
+    border-radius: 12px;
+    background-color: #ffffff;
+    color: #4a5568;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+}
+
+select:focus {
+    border-color: #d63384;
+    box-shadow: 0 0 0 3px rgba(214, 51, 132, 0.15);
+}
+
+select:hover {
+    border-color: #d63384;
+}
