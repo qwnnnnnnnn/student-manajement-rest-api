@@ -4,7 +4,7 @@ Aplikasi Manajemen Data Siswa berbasis web yang dibuat menggunakan Express.js un
 
 ## Identitas Pembuat
 - **Nama:** Ratu Haerunnisa
-- **Kelas:** XI RPL
+- **Kelas:** XII RPL
 - **Sekolah:** SMK Bina Putra Mandiri
 
 ## Teknologi yang Digunakan
